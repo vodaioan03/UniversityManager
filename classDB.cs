@@ -6,7 +6,27 @@ using System.Threading.Tasks;
 
 namespace UniversityManager
 {
-    internal class classDB
+    public class Student
     {
+        public Student() 
+        { 
+
+        }
+    }
+
+    public class Discipline
+    {
+        public Discipline()
+        {
+
+        }
+    }
+
+    public class Grade
+    {
+        public Grade()
+        {
+
+        }
     }
 }

@@ -8,13 +8,11 @@ namespace UniversityManager
 {
     public class uiMenu
     {
-        LogicClass logicClass;
         inputMenu inputmenu;
         public bool programRunning = false;
 
         public uiMenu() 
         {
-            this.logicClass = new LogicClass();
             this.programRunning = true;
             this.inputmenu = new inputMenu(this);
         }
@@ -24,14 +22,19 @@ namespace UniversityManager
             while (programRunning)
             {
                 mainMenu();
-                try
-                {
-                    inputmenu.inputOption();
-                }
-                catch (FormatException ex)
-                {
-                    Console.WriteLine("Input option wrong! Type an integer number.");
-                }
+                MenuOption();
+            }
+        }
+
+        public void MenuOption()
+        {
+            try
+            {
+                inputmenu.inputOption();
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Input option wrong! Type an integer number.");
             }
         }
 
@@ -59,6 +62,13 @@ namespace UniversityManager
             Console.WriteLine("8. Show list with disciplines");
             Console.WriteLine("9. Back to Main Menu");
             Console.WriteLine("10. Exit");
+        }
+
+        public void StudentMenu()
+        {
+            Console.WriteLine(" == Student Menu == ");
+            Console.WriteLine("1. Student ID");
+            Console.WriteLine("2. Student Name");
         }
 
     }
@@ -90,19 +100,32 @@ namespace UniversityManager
             }
             this.actualmenu--;
         }
+
+        public void inputStudent()
+        {
+            int studentID = Convert.ToInt32(Console.ReadLine());
+            String studentName = Console.ReadLine();
+        }
     }
 
     public class OptionLogic
     {
+        StudentLogic student;
+        DisciplineLogic discipline;
+        GradeLogic grade;
         Action[][] actionsMenu;
         uiMenu menu;
         inputMenu inputmenu;
+
         public OptionLogic(uiMenu menu, inputMenu imenu)
         {
             this.actionsMenu = new Action[][] { new Action[] {() => ManageMenuLogic(), () => AddGrade(), () => SearchDiscipline(), () => SearchStudent(), () => CreateStatistic(), () => ExitMenu() },
                                                 new Action[] {() => AddStudent(), () => AddDiscipline(), () => RemoveStudent(), () => RemoveDiscipline(), () => ModifyStudent(), () => ModifyDiscipline(), () => ListStudent(), () => ListDiscipline(), () => BackMenu(), () => ExitMenu() } };
             this.inputmenu = imenu;
             this.menu = menu;
+            this.discipline = new DisciplineLogic();
+            this.student = new StudentLogic();
+            this.grade = new GradeLogic();
         }
 
         public void ConvertOption(int option, int actualMenu)
@@ -121,7 +144,7 @@ namespace UniversityManager
         public void ManageMenuLogic()
         {
             this.menu.manageMenu();
-            this.inputmenu.inputOption();
+            this.menu.MenuOption();
         }
 
         public void AddGrade()
@@ -153,6 +176,16 @@ namespace UniversityManager
         public void AddStudent()
         {
             Console.WriteLine("inaddStudent");
+            this.menu.StudentMenu();
+            try
+            {
+                this.inputmenu.inputStudent();
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Input student wrong! Type a valid input.");
+            }
+            
         }
         public void AddDiscipline()
         {
@@ -182,10 +215,7 @@ namespace UniversityManager
         {
             Console.WriteLine("In List discipline");
         }
-        public void BackMenu()
-        {
-            Console.WriteLine("In Back Menu");
-        }
+        public void BackMenu()  { }
 
     }
 }

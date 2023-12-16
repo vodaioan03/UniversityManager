@@ -6,7 +6,20 @@ using System.Threading.Tasks;
 
 namespace UniversityManager
 {
-    internal class LogicClass
+    public class StudentLogic
     {
+        public StudentLogic() { }
+    }
+
+    public class DisciplineLogic
+    {
+        public DisciplineLogic() 
+        { }
+    }
+
+    public class GradeLogic
+    {
+        public GradeLogic() 
+        { }
     }
 }
