@@ -22,19 +22,6 @@ namespace UniversityManager
             while (programRunning)
             {
                 mainMenu();
-                MenuOption();
-            }
-        }
-
-        public void MenuOption()
-        {
-            try
-            {
-                inputmenu.inputOption();
-            }
-            catch (FormatException ex)
-            {
-                Console.WriteLine("Input option wrong! Type an integer number.");
             }
         }
 
@@ -47,6 +34,15 @@ namespace UniversityManager
             Console.WriteLine("4. Search Student");
             Console.WriteLine("5. Create Statistics");
             Console.WriteLine("6. Exit");
+            try
+            {
+                this.inputmenu.inputOptionMain();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Wrong option in Main Menu!");
+            }
+            
         }
 
         public void manageMenu()
@@ -62,13 +58,42 @@ namespace UniversityManager
             Console.WriteLine("8. Show list with disciplines");
             Console.WriteLine("9. Back to Main Menu");
             Console.WriteLine("10. Exit");
+            try
+            {
+                this.inputmenu.inputOptionManage();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("[Manage Menu] Wrong option in Main Menu!");
+            }
         }
 
         public void StudentMenu()
         {
             Console.WriteLine(" == Student Menu == ");
-            Console.WriteLine("1. Student ID");
-            Console.WriteLine("2. Student Name");
+            Console.WriteLine("     Type data for new student!");
+            try
+            {
+                this.inputmenu.inputStudent();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("[Input Student Menu] Wrong option in Main Menu!");
+            }
+        }
+
+        public void DisciplineMenu()
+        {
+            Console.WriteLine(" == Discipline Menu == ");
+            Console.WriteLine("     Type data for new discipline!");
+            try
+            {
+                this.inputmenu.inputDiscipline();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("[Input Discipline Menu] Wrong option in Main Menu!");
+            }
         }
 
     }
@@ -85,26 +110,47 @@ namespace UniversityManager
             this.actualmenu = 0;
         }
 
-        public void inputOption()
+        public void inputOptionMain()
         {
-            Console.Write("Type option: ");
-            int option = Convert.ToInt32(Console.ReadLine());
-            this.actualmenu++;
-            try
+            Console.Write("[Main Menu]Choose option :");
+            int optionMainMenu = Convert.ToInt32(Console.ReadLine()) - 1;
+            Action[] actionMenuMain = new Action[] {() => this.logicoption.ManageMenuLogic(), () => this.logicoption.AddGrade(), ()  => this.logicoption.SearchDiscipline(), () => this.logicoption.SearchStudent(), () => this.logicoption.CreateStatistic(), () => this.logicoption.ExitMenu()};
+            if (optionMainMenu < actionMenuMain.Length) 
             {
-                this.logicoption.ConvertOption(option, this.actualmenu);
+                actionMenuMain[optionMainMenu]();
             }
-            catch (Exception ex)
+            else
             {
+                throw new Exception("[Main Menu] Option menu is invalid!");
+            }
+        }
 
-            }
-            this.actualmenu--;
+        public void inputOptionManage()
+        {
+            Console.Write("[Manage Menu] Type option: ");
+            int optionManageMenu = Convert.ToInt32(Console.ReadLine()) -1 ;
+            Action[] actionManageMenu = new Action[] { () => this.logicoption.AddStudent(), () => this.logicoption.AddDiscipline(), () => this.logicoption.RemoveStudent(), () => this.logicoption.RemoveDiscipline(), () => this.logicoption.ModifyStudent(), () => this.logicoption.ModifyDiscipline(), () => this.logicoption.ListStudent(), () => this.logicoption.ListDiscipline(), () => this.logicoption.BackMenu(), () => this.logicoption.ExitMenu() };
+            if (optionManageMenu < actionManageMenu.Length)
+            { actionManageMenu[optionManageMenu](); }
+            else { throw new Exception("[Manage Menu] Invalid Option! Type another one!"); }
         }
 
         public void inputStudent()
         {
+            Console.Write("[Student Menu] Type Student ID(needs to be unique) :");
             int studentID = Convert.ToInt32(Console.ReadLine());
+            Console.Write("[Student Menu] Type Student Name : ");
             String studentName = Console.ReadLine();
+            Console.WriteLine("Student Added to the list!");
+        }
+
+        public void inputDiscipline()
+        {
+            Console.Write("[Discipline Menu] Type Discipline ID(needs to be unique) :");
+            int studentID = Convert.ToInt32(Console.ReadLine());
+            Console.Write("[Discipline Menu] Type Discipline Name : ");
+            String studentName = Console.ReadLine();
+            Console.WriteLine("Discipline Added to the list!");
         }
     }
 
@@ -119,37 +165,21 @@ namespace UniversityManager
 
         public OptionLogic(uiMenu menu, inputMenu imenu)
         {
-            this.actionsMenu = new Action[][] { new Action[] {() => ManageMenuLogic(), () => AddGrade(), () => SearchDiscipline(), () => SearchStudent(), () => CreateStatistic(), () => ExitMenu() },
-                                                new Action[] {() => AddStudent(), () => AddDiscipline(), () => RemoveStudent(), () => RemoveDiscipline(), () => ModifyStudent(), () => ModifyDiscipline(), () => ListStudent(), () => ListDiscipline(), () => BackMenu(), () => ExitMenu() } };
-            this.inputmenu = imenu;
+           this.inputmenu = imenu;
             this.menu = menu;
             this.discipline = new DisciplineLogic();
             this.student = new StudentLogic();
             this.grade = new GradeLogic();
         }
 
-        public void ConvertOption(int option, int actualMenu)
-        {
-            Console.WriteLine("In option convert");
-            option--;
-            actualMenu--;
-            if (actualMenu < this.actionsMenu.Length && option < this.actionsMenu[actualMenu].Length)
-            {
-                this.actionsMenu[actualMenu][option]();
-            }
-            else
-            { }
-        }
-
         public void ManageMenuLogic()
         {
             this.menu.manageMenu();
-            this.menu.MenuOption();
         }
 
         public void AddGrade()
         {
-
+            this.menu.StudentMenu();
         }
 
         public void SearchDiscipline()
@@ -177,19 +207,12 @@ namespace UniversityManager
         {
             Console.WriteLine("inaddStudent");
             this.menu.StudentMenu();
-            try
-            {
-                this.inputmenu.inputStudent();
-            }
-            catch (FormatException ex)
-            {
-                Console.WriteLine("Input student wrong! Type a valid input.");
-            }
             
         }
         public void AddDiscipline()
         {
             Console.WriteLine("In Add Discipline");
+            this.menu.DisciplineMenu();
         }
         public void RemoveStudent()
         {
