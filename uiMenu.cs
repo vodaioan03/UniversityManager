@@ -124,7 +124,7 @@ namespace UniversityManager
             }
             catch (Exception)
             {
-                Console.WriteLine("[Input Student Menu] Wrong option in Main Menu!");
+                Console.WriteLine("Error! Something doesen't work good.");
             }
         }
 
@@ -240,13 +240,14 @@ namespace UniversityManager
             Console.Write("[Discipline Menu] Type Discipline Name : ");
             String studentName = Console.ReadLine();
             Console.WriteLine("Discipline Added to the list!");
+            this.disciplineLogic.AddDiscipline(studentID, studentName);
         }
 
         public void inputRemoveStudent()
         {
             Console.Write(" Type ID for delete student: ");
             int studentID = Convert.ToInt32(Console.ReadLine());
-
+            this.studentLogic.RemoveStudent(studentID);
         }
 
         public void inputRemoveDiscipline()
@@ -260,9 +261,10 @@ namespace UniversityManager
         {
             Console.Write(" Type ID for modify student: ");
             int studentID = Convert.ToInt32(Console.ReadLine());
-
+            Console.Write(" Type New Name for Student: ");
+            string newStudentName = Console.ReadLine();
+            this.studentLogic.ModifyStudent(studentID, newStudentName);
         }
-
         public void inputModifyDiscipline()
         {
             Console.Write(" Type ID for modify discipline: ");
