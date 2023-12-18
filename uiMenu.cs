@@ -27,7 +27,7 @@ namespace UniversityManager
 
         public void mainMenu()
         {
-            Console.WriteLine(" == Menu University Management == ");
+            Console.WriteLine("\n == Menu University Management == ");
             Console.WriteLine("1. Manage Students and Disciplines");
             Console.WriteLine("2. Add Grade");
             Console.WriteLine("3. Search Discipline");
@@ -47,7 +47,7 @@ namespace UniversityManager
 
         public void manageMenu()
         {
-            Console.WriteLine(" == Menu Manage Students and Disciplines ==");
+            Console.WriteLine("\n == Menu Manage Students and Disciplines ==");
             Console.WriteLine("1. Add Student");
             Console.WriteLine("2. Add Discipline");
             Console.WriteLine("3. Delete Student");
@@ -66,6 +66,25 @@ namespace UniversityManager
             {
                 Console.WriteLine("[Manage Menu] Wrong option in Main Menu!");
             }
+        }
+        public void AddGradeMenu()
+        {
+            Console.WriteLine(" == Grade Menu ==");
+        }
+
+        public void SearchStudent()
+        {
+            Console.WriteLine(" == Student Menu ==");
+        }
+
+        public void SearchDiscipline()
+        {
+            Console.WriteLine(" == Discipline Menu ==");
+        }
+
+        public void CreateStatistics()
+        {
+            Console.WriteLine(" == Statistics Menu ==");
         }
 
         public void StudentMenu()
@@ -96,25 +115,94 @@ namespace UniversityManager
             }
         }
 
+        public void RemoveStudent()
+        {
+            Console.WriteLine(" == Student Menu == ");
+            try
+            {
+                this.inputmenu.inputRemoveStudent();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("[Input Student Menu] Wrong option in Main Menu!");
+            }
+        }
+
+        public void RemoveDiscipline()
+        {
+            Console.WriteLine(" == Discipline Menu == ");
+            try
+            {
+                this.inputmenu.inputRemoveDiscipline();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("[Input Discipline Menu] Wrong option in Main Menu!");
+            }
+        }
+
+        public void ModifyStudent()
+        {
+            Console.WriteLine(" == Student Menu == ");
+            try
+            {
+                this.inputmenu.inputModifyStudent();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("[Input Student Menu] Wrong option in Main Menu!");
+            }
+        }
+        public void ModifyDiscipline()
+        {
+            Console.WriteLine(" == Discipline Menu == ");
+            try
+            {
+                this.inputmenu.inputModifyDiscipline();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("[Input Discipline Menu] Wrong option in Main Menu!");
+            }
+        }
+        public void ListStudent()
+        {
+            Console.WriteLine(" == Student Menu ==");
+        }
+        public void ListDiscipline()
+        {
+            Console.WriteLine(" == Discipline Menu ==");
+        }
+
+        public void ExitMenu()
+        {
+            Console.WriteLine("Exiting...");
+            this.programRunning = false;
+        }
+
     }
 
     public class inputMenu
     {
         uiMenu menu;
-        OptionLogic logicoption;
-        int actualmenu;
+        StudentLogic studentLogic;
+        DisciplineLogic disciplineLogic;
+        GradeLogic gradeLogic;
+ 
         public inputMenu(uiMenu menu)
         {
-            this.logicoption = new OptionLogic(menu,this);
             this.menu = menu;
-            this.actualmenu = 0;
+            this.disciplineLogic = new DisciplineLogic(this.menu);
+            this.studentLogic = new StudentLogic(this.menu);
+            this.gradeLogic = new GradeLogic(this.menu);
+            
         }
 
         public void inputOptionMain()
         {
             Console.Write("[Main Menu]Choose option :");
             int optionMainMenu = Convert.ToInt32(Console.ReadLine()) - 1;
-            Action[] actionMenuMain = new Action[] {() => this.logicoption.ManageMenuLogic(), () => this.logicoption.AddGrade(), ()  => this.logicoption.SearchDiscipline(), () => this.logicoption.SearchStudent(), () => this.logicoption.CreateStatistic(), () => this.logicoption.ExitMenu()};
+            Action[] actionMenuMain = new Action[] {() => this.menu.manageMenu(), () => this.menu.AddGradeMenu(), ()  => this.menu.SearchDiscipline(), () => this.menu.SearchStudent(), () => this.menu.CreateStatistics(), () => this.menu.ExitMenu()};
             if (optionMainMenu < actionMenuMain.Length) 
             {
                 actionMenuMain[optionMainMenu]();
@@ -129,7 +217,7 @@ namespace UniversityManager
         {
             Console.Write("[Manage Menu] Type option: ");
             int optionManageMenu = Convert.ToInt32(Console.ReadLine()) -1 ;
-            Action[] actionManageMenu = new Action[] { () => this.logicoption.AddStudent(), () => this.logicoption.AddDiscipline(), () => this.logicoption.RemoveStudent(), () => this.logicoption.RemoveDiscipline(), () => this.logicoption.ModifyStudent(), () => this.logicoption.ModifyDiscipline(), () => this.logicoption.ListStudent(), () => this.logicoption.ListDiscipline(), () => this.logicoption.BackMenu(), () => this.logicoption.ExitMenu() };
+            Action[] actionManageMenu = new Action[] { () => this.menu.StudentMenu(), () => this.menu.DisciplineMenu(), () => this.menu.RemoveStudent(), () => this.menu.RemoveDiscipline(), () => this.menu.ModifyStudent(), () => this.menu.ModifyDiscipline(), () => this.menu.ListStudent(), () => this.menu.ListDiscipline(), () => { }, () => this.menu.ExitMenu() };
             if (optionManageMenu < actionManageMenu.Length)
             { actionManageMenu[optionManageMenu](); }
             else { throw new Exception("[Manage Menu] Invalid Option! Type another one!"); }
@@ -142,6 +230,7 @@ namespace UniversityManager
             Console.Write("[Student Menu] Type Student Name : ");
             String studentName = Console.ReadLine();
             Console.WriteLine("Student Added to the list!");
+            this.studentLogic.AddStudent(studentID, studentName);
         }
 
         public void inputDiscipline()
@@ -152,93 +241,33 @@ namespace UniversityManager
             String studentName = Console.ReadLine();
             Console.WriteLine("Discipline Added to the list!");
         }
-    }
 
-    public class OptionLogic
-    {
-        StudentLogic student;
-        DisciplineLogic discipline;
-        GradeLogic grade;
-        Action[][] actionsMenu;
-        uiMenu menu;
-        inputMenu inputmenu;
-
-        public OptionLogic(uiMenu menu, inputMenu imenu)
+        public void inputRemoveStudent()
         {
-           this.inputmenu = imenu;
-            this.menu = menu;
-            this.discipline = new DisciplineLogic();
-            this.student = new StudentLogic();
-            this.grade = new GradeLogic();
-        }
-
-        public void ManageMenuLogic()
-        {
-            this.menu.manageMenu();
-        }
-
-        public void AddGrade()
-        {
-            this.menu.StudentMenu();
-        }
-
-        public void SearchDiscipline()
-        {
+            Console.Write(" Type ID for delete student: ");
+            int studentID = Convert.ToInt32(Console.ReadLine());
 
         }
 
-        public void SearchStudent()
+        public void inputRemoveDiscipline()
         {
+            Console.Write(" Type ID for delete discipline: ");
+            int studentID = Convert.ToInt32(Console.ReadLine());
 
         }
-        public void CreateStatistic()
+
+        public void inputModifyStudent()
         {
+            Console.Write(" Type ID for modify student: ");
+            int studentID = Convert.ToInt32(Console.ReadLine());
 
         }
-        public void ExitMenu()
-        {
-            Console.WriteLine("Exiting...");
-            this.menu.programRunning = false;
-        }
 
-        //FOR Manage Menu
+        public void inputModifyDiscipline()
+        {
+            Console.Write(" Type ID for modify discipline: ");
+            int studentID = Convert.ToInt32(Console.ReadLine());
 
-        public void AddStudent()
-        {
-            Console.WriteLine("inaddStudent");
-            this.menu.StudentMenu();
-            
         }
-        public void AddDiscipline()
-        {
-            Console.WriteLine("In Add Discipline");
-            this.menu.DisciplineMenu();
-        }
-        public void RemoveStudent()
-        {
-            Console.WriteLine("in Remove Student");
-        }
-        public void RemoveDiscipline()
-        {
-            Console.WriteLine("In remove Discipline");
-        }
-        public void ModifyStudent()
-        {
-            Console.WriteLine("In Modify Student");
-        }
-        public void ModifyDiscipline()
-        {
-            Console.WriteLine("In Modify Discipline");
-        }
-        public void ListStudent()
-        {
-            Console.WriteLine("In list Student");
-        }
-        public void ListDiscipline()
-        {
-            Console.WriteLine("In List discipline");
-        }
-        public void BackMenu()  { }
-
     }
 }
